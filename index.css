@@ -1,0 +1,12 @@
+@font-face {
+    font-family: dos;
+    src: url(/win12/fonts/dos.ttf);
+}
+#screen_container > div > *,.container > div >*{
+     font-family: dos !important;
+}
+
+span{
+    color:white;
+    break-before: avoid;
+}
