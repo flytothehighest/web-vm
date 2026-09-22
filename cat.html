@@ -1,0 +1,112 @@
+<!doctype html>
+<head>
+<title>MEMZ（彩虹猫） 模拟器| ReducedRadius的工具页面</title>
+<meta content="网页虚拟机,在线虚拟机,Nyan cat,彩虹猫,MEMZ" name="keywords">
+<meta content="在网页上运行的小型虚拟机,运行的RAM(内存)最多为 2GB,此页面为彩虹猫模拟器" name="description">
+<meta charset="utf-8">
+<style>
+    body{
+        color:white;
+        background-color: black;
+    }
+    span{
+        color: white;
+    }
+</style>
+<script src="libv86.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name='apple-mobile-web-app-capable' content='yes' />
+        <meta name="format-detection" content="telephone=no" />
+<link rel="stylesheet" href="../global.css">
+<script src="functions.js"></script>
+<script src="../global.js"></script>
+
+<script>
+
+
+window.onload = function()
+{
+
+    setTimeout(e =>{
+        
+    var emulator = window.emulator = new V86({
+        wasm_path: "v86.wasm",
+        memory_size: 512*1024,
+        vga_memory_size: 128*1024,
+        screen_container: document.getElementById("screen_container"),
+        bios: {
+            url: "bios/seabios.bin",
+        },
+        vga_bios: {
+            url: "bios/vgabios.bin",
+        },
+        fda:{
+            url:"images/MEMZ.img"
+        },
+        fdb:{
+                buffer:new ArrayBuffer(1.44*1024*1024)
+        },
+        hdb:{
+            buffer:new ArrayBuffer(1.44*1024*1024)
+        },
+        autostart: true,
+    });
+    emulator.bus.register("download-progress",function(l){
+      if(l.lengthComputable&&(l.loaded/l.total) != 1){
+         document.title = `已加载`+Math.round((l.loaded/l.total)*100)+`%`
+      }else if(l.lengthComputable){
+         document.title = `MEMZ模拟器| ReducedRadius的工具页面`
+      }
+    })
+
+},800)
+
+}
+
+</script>
+</head>
+<body>
+<div id="screen_container" >
+    <div style="white-space: pre; font: 14px monospace" ></div>
+    <canvas style="display: none"></canvas>
+</div>
+<span>T_T 彩虹猫显示效果只能这样了。此画质经优化多次后仍然较劣</span>
+<button onclick="emulator.restart()">重启</button>
+<button onclick="emulator.stop()">暂停</button>
+<button onclick="location.replace('index.html')">返回主页面</button>
+<button onclick="emulator.run()">继续使用</button>
+<button onclick="for(var c of [29, 56, 83, 157, 184, 211]){emulator.bus.send('keyboard-code',c)}">Ctrl-Alt-Del组合键</button>
+<button onclick="var href = (emulator.screen_make_screenshot().src);
+var a = document.createElement('a');
+a.href=href;
+a.download = '截图.png';
+a.click()
+">截图</button>
+<span>放大倍数:</span>
+<input type="number" max="10" min="0.1" step="0.1" onchange="if(this.value < 3)emulator.screen_adapter.set_scale(this.value,this.value)" value="1">
+<input type="text" id="ms" placeholder="键入键盘字符"><button onclick="emulator.keyboard_adapter.simulate_char(document.querySelector('#ms').value);">键入</button>
+<button onclick="(async function(){
+    const l = await emulator.save_state();
+    var z = new Blob([l]);
+    const _a = document.createElement('a');
+    _a.href = window.URL.createObjectURL(z);
+    _a.download = 'state.bin';
+    _a.click()
+    })()">保存状态</button>
+    <button onclick="
+      var f = document.createElement('input');
+      f.type= 'file';
+      f.accept = '.bin';
+      f.onchange= async function(){
+        emulator.restore_state(await f.files[0].arrayBuffer())
+      }
+      f.click()
+    ">加载状态</button>
+    <button onclick="ReplaceDisk()">驱动器管理</button>
+    <button onclick="checkDrive()">驱动器信息</button>
+    <br /><br /><span>模拟实验效果(效果仅供参考)</span>:
+    <button onclick="emulator.v86.cpu.reset_memory()">取出虚拟内存条</button>
+    <button onclick="emulator.v86.cpu.devices.vga.vga_memory = new Uint8Array([0,255])">破坏显存（VGA Memory）</button>
+    <button onclick="emulator.v86.cpu.memory_map_write8.fill(254);emulator.v86.cpu.reset_cpu()">取出CPU</button>
+    <button onclick="emulator.speaker_adapter.audio_context.suspend()">关闭声音</button>
+</body>

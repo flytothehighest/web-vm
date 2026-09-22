@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/global.js"></script>
+    <title>“网页虚拟机”反馈/捐赠页面</title>
+
+</head>
+<body style="background-color: black;color:white">
+    <button onclick="location.replace('index.html')">返回</button>
+    <br />
+    <h1>反馈&捐赠</h1>
+    <br />
+    <b>基本准则：<br />1.请注意，滥用该功能者，其IP地址将禁止进入本站点。<br />2.请勿发送敏感信息。<br />3.请保持反馈整体语言平和、自然、准确。<br />4.请发送反馈，不要掺杂个人情绪表达以及针对本页面无关的观点。</b><br />
+<textarea placeholder="说说你想要什么功能，发生什么bug，都可以说出来。必要时可发送F12控制台消息。" style="width: 15vw;height:20vh; resize:both;background-color: rgb(54, 54, 54);cursor: text !important;color:rgb(209, 217, 189)">
+
+</textarea>
+<br />
+<button onclick="
+if(localStorage.getItem('last_sub')&&Number(localStorage.getItem('last_sub')) -Date.now() >= -8*60*60*1000){
+   mdui.alert('为缓解滥用，请在上次提交8小时后再次提交。','冷却中')
+}else{
+localStorage.setItem('last_sub',Date.now());fetch('/api/visitor_complaint/'+Date.now(),{
+    method:`POST`,
+    body:document.querySelector('textarea').value
+}).then(e =>{mdui.alert('您的反馈信息已提交成功~',  `反馈成功`)}).catch(e =>mdui.alert('提交失败'))
+}">提交反馈</button>
+<br />
+<br />
+
+您也可自愿捐款(0.5~20RMB不等)以支持继续<del>抄文档</del>开发：<br />
+<img src="donateqr.png">
+<script>
+
+</script>
+</body>
+</html>

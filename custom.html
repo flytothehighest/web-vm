@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name='apple-mobile-web-app-capable' content='yes' />
+        <meta name="format-detection" content="telephone=no" />
+        <title>自定义虚拟机| ReducedRadius的工具页面</title>
+        <meta content="网页虚拟机,在线虚拟机,自定义虚拟机" name="keywords">
+        <meta content="在网页上运行的小型虚拟机,运行的RAM(内存)最多为 2GB,本页面为自定义虚拟机" name="description">
+        <link rel="stylesheet" href="../global.css">
+        <link rel="stylesheet" href="index.css">
+        <script src="functions.js"></script>
+        <meta name="robots" content="index, follow">
+        <style>
+            .main{
+                display: grid;
+            }
+            input[type="file"]{
+                margin-left: 60vw;
+                width:200px;
+                color:black;
+                background-color: rgb(213, 253, 239);
+            }
+            input[type="file"]::-webkit-file-upload-button{
+              color:rgb(128, 123, 118)
+            }
+            input[type="number"]{
+                width:10vw
+            }
+            input[type="checkbox"]{
+                width:10vw
+            }
+            input{
+                border-radius: 6px;
+            }
+            button[type="button"]{
+                background-color: lightblue;
+                border-style: none;
+                color:black;
+                border-radius: 3px;
+                left:0px;
+                position: absolute;
+                top:102%;
+                width: 100px;
+            }
+            body{
+                color-scheme: dark only;
+                background-color: rgb(35, 35, 35);
+            }
+            div{
+                color:white
+            }
+            .container{
+               float: left;
+               outline: 1px solid #252527;
+               overflow:scroll
+            }
+            .container::-webkit-scrollbar{
+                width: 5px;
+                height: 5px;
+            }
+            del::before{
+                all:initial !important;
+            }
+            del{
+                text-decoration: line-through !important;
+                background-color:white !important;
+            }
+           .mdui-dialog-title{
+            color: black !important;
+           }
+        </style>
+    </head>
+    <body>
+        <div id="mask" style="display: none;position:absolute;top:0;left:0;width: 100vw;height: 100vh;z-index: 999;backdrop-filter: blur(8px); opacity: .8;background-color: black;cursor: wait;text-align: center;vertical-align: middle;color:white">请稍候...</div>
+        <div class="main">
+            <button onclick="location.replace('index.html')">返回</button>
+            <h2>自定义虚拟机（fixed in 2026.9.5）</h2>
+<br />
+<br />
+<b style="color:white">Tips：<br />1.请不要在自定义虚拟机未加载完毕时点击按钮，否则会发生报错。<br />2.不要输入一些奇怪格式文件，导致类别无法识别，出现报错现象</b>
+<br />
+<h3>模拟硬件配置</h3>
+            <span>虚拟机光盘映像文件(.iso,&lt;1GiB):</span>
+            <input type="file" accept=".iso" class="iso" onchange="this.files[0].size> 1024**3?mdui.alert('您的ISO文件超过1GiB，可能导致卡顿，已<del>吐出</del>撤销您的镜像','不要这么大的镜像啊'):globalThis.iso = window.URL.createObjectURL(this.files[0])">
+            <span><b>软盘映像:</b></span>
+            A:
+            <input type="file" accept=".img,.flp" data-type="floppy1" onchange="if(this.files[0].size > 1509950){
+                 if(!confirm('您的软盘映像超过1.4MB,可能无法工作,确定继续?')){
+                    return;
+                 }
+            };globalThis.fda = window.URL.createObjectURL(this.files[0])">
+             <button onclick="globalThis.fda = `images/1.44MB.img`;" >设置为空盘(1.44MB)</button><br />
+            B:
+            <input type="file" accept=".img,.flp" data-type="floppy2" onchange="
+            if(this.files[0].size > 1509950){
+                 if(!confirm('您的软盘映像超过1.4MB,可能无法工作,确定继续?')){
+                    return;
+                 }
+            };
+            ;globalThis.fdb = window.URL.createObjectURL(this.files[0])">
+            <button onclick="globalThis.fdb = `images/1.44MB.img`" >设置为空盘(1.44MB)</button><br />
+            <span><b>硬盘映像:</b></span>
+            <br />
+            硬盘1:
+            <input type="file" accept=".img,.dsk" class="hd1" onchange="globalThis.hda = window.URL.createObjectURL(this.files[0])"><br />
+            或者,加入一个空磁盘,大小(MiB):
+            <input type="number" min="0" max="1024" class="hdb" value="0">
+            <br />
+            硬盘2:
+            <input type="file" accept=".img,.dsk" class="hd2" onchange="globalThis.hdb = window.URL.createObjectURL(this.files[0])"><br />
+            内核映像(Linux kernel,bzimage)：
+            <input type="file" class="bz" onchange="globalThis.bz = window.URL.createObjectURL(this.files[0])"><br />
+            RAM系统映像(Linux ramdisk image,initrd)：
+            <input type="file" class="init" onchange="globalThis.init = window.URL.createObjectURL(this.files[0])"><br />
+            系统内存(MB)
+            <input type="number" step="2" max="8192" min="1" value="128" class="rom">
+            显存大小(MB)
+            <input type="number" step="1" max="128" min="1" value="16" class="video">
+            音频是否启用:
+            <input type="checkbox" class="audio" checked>
+            启用ACPI:
+            <input type="checkbox" class="ac" checked>
+            <br />
+            <h3>启动&引导</h3>
+            使用的BIOS ROM:
+            <select id="bios">
+                <option value="bios/seabios.bin,bios/vgabios.bin">使用SEA BIOS</option>
+                <option value="bios/bochs-bios.bin,bios/bochs-vgabios.bin">使用BOCHS BIOS</option>
+                <option value="bios/bochs-bios.bin,bios/VGABIOS-lgpl.bin">使用BOCHS BIOS+lgpl vga bios</option>
+            </select>
+            启动优先顺序:
+            <select id="boot_order">
+                <option value="0">自动</option>
+                <option value="213">CD / 软盘 / 硬盘</option>
+                <option value="123">CD / 硬盘 / 软盘</option>
+                <option value="231">软盘 / CD / 硬盘</option>
+                <option value="321">软盘 / 硬盘 / CD</option>
+                <option value="312">硬盘 / 软盘 / CD</option>
+                <option value="132">硬盘 / CD / 软盘</option>
+            </select>
+            <br>
+            <br>
+            快速启动(适用于bochs bios)是否启用:
+            <input type="checkbox" class="fboot" >
+            <br>
+            <br>
+            开机时启动引导菜单(适用于seabios)是否启用:
+            <input type="checkbox" class="mboot" >
+            <br />
+            <br>
+            <h3>显示</h3>
+            (**实验性功能，个人认为体验感不佳)显示纯文本时采用图形化显示（指在命令行模式下，使用 Canvas 显示文本模式，搭配 VGA 字体。）
+            <input type="checkbox" class="canva">
+            纯文本显示为绿色
+            <input type="checkbox" class="green">
+            <br />
+            <br>
+            <br />
+            <br>
+            <br />
+            <button type="button" style="position: relative;">启动!</button>
+        </div>
+        <script>
+
+           function $(a = ""){
+             return document.querySelector(a)
+           }
+           $('button[type="button"]').onclick = () =>{
+            $('#mask').style.display = 'block';
+            document.title = "虚拟机正在准备中...(*’U`*)";
+            document.body.insertAdjacentHTML("beforeend", `<div class="container" style="width:100%;height:85%;position:absolute;top:15%;left:0%;background-color:black;color:${$('.green').checked?"green":"white"} !important">
+            <div style="white-space: pre; font-size: 15px;line-height:normal;position:relative;font-weight:bold"></div>
+            <canvas style="display: none;image-rendering: pixelated;background-color:#000000" width="1024" height="768"></canvas>
+        </div>
+        <br>
+        <br>
+        <button onclick="location.replace('index.html')">退出</button>
+        <button onclick="document.querySelector('canvas').requestFullscreen()">全屏使用</button>
+        <button onclick="emulator.restart()">重启</button>
+<button onclick="emulator.stop()">暂停</button>
+<button onclick="emulator.run()">继续使用</button>
+<button onclick="for(var c of [29, 56, 83, 157, 184, 211]){emulator.bus.send('keyboard-code',c)}">Ctrl-Alt-Del组合键</button>
+<input type="number" id="key" placeholder="键入键代码"><button onclick="emulator.keyboard_send_keys([document.querySelector('#key').value])">键入</button>
+<button onclick="emulator.keyboard_send_keys([13])">按下回车</button>
+<button onclick="var href = (emulator.screen_make_screenshot().src);
+var a = document.createElement('a');
+a.href=href;
+a.download = '截图.png';
+a.click()
+">截图</button>
+<span>倍数:</span>
+<input type="number" max="10" min="0.1" step="0.1" onchange="if(this.value < 3)emulator.screen_adapter.set_scale(this.value,this.value)" value="1">
+<input type="text" id="ms" placeholder="键入键盘字符"><button onclick="emulator.keyboard_send_text(document.querySelector('#ms').value);">键入</button>
+<button onclick="(async function(){
+const l = await emulator.save_state();
+var z = new Blob([l]);
+const _a = document.createElement('a');
+_a.href = window.URL.createObjectURL(z);
+_a.download = 'state.bin';
+_a.click()
+})()">保存状态</button>
+<button onclick="
+  var f = document.createElement('input');
+  f.type= 'file';
+  f.accept = '.bin';
+  f.onchange= async function(){
+    emulator.restore_state((await f.files[0].arrayBuffer()))
+  }
+  f.click()
+">加载状态</button>
+    <button onclick="ReplaceDisk()">驱动器管理</button>
+    <button onclick="checkDrive()">驱动器信息</button><br />
+    <button onclick="location.replace('feedback.html')">运行不了？告诉我吧ヾ(≧▽≦*)o</button>
+    <button onclick='vga_dump()'>导出VGA内存状态（hex）</button>
+    <span>注意：放大在命令行模式中不建议使用;页面刷新后直接销毁该虚拟机实例</span>
+`)
+$(".main").style.display = "none"
+    setTimeout(q =>{
+               const data = {
+              
+        bios:{
+             url:document.querySelector("#bios").value.split(",")[0]
+        },
+        vga_bios: {
+            url: document.querySelector("#bios").value.split(",")[1],
+        },
+        screen_container:document.querySelector(
+            ".container"
+        ),
+        cdrom:globalThis.iso?{
+            url:globalThis.iso
+        }:undefined,
+        fda:(globalThis.fda)?{
+            url:globalThis.fda
+        }:undefined,
+        fdb:(globalThis.fdb)?{
+            url:globalThis.fdb
+        }:undefined,
+        hda:(globalThis.hda||Number(document.querySelector('.hdb').value))?{
+            url:globalThis.hda||undefined,
+            buffer:document.querySelector('.hdb').value?new ArrayBuffer(Number(document.querySelector('.hdb').value)*1024*1024):undefined
+        }:undefined,
+        hdb:globalThis.hdb?{
+            url:globalThis.hdb
+        }:undefined,
+        bzimage:globalThis.bz?{
+            url:globalThis.bz
+        }:undefined,
+        initrd:globalThis.init?{
+            url:globalThis.init
+        }:undefined,
+        autostart:true,
+        disable_speaker:!$(".audio").checked,
+        acpi:$(".ac").checked,
+        boot_order:parseInt(document.querySelector(
+            '#boot_order'
+        ).value,16),
+        memory_size:$(".rom").value*1024*1024,
+        vga_memory_size:$(".video").value*1024*1024,
+        wasm_path: "v86.wasm",
+        fastboot:$('.fboot').checked,
+        bootmenu:$(".mboot").checked,
+        screen:{
+            use_graphical_text:$('.canva').checked
+        }
+               }
+    Object.keys(data).forEach(e =>{
+               if(data[e] == undefined) {delete data[e]}
+    })
+               globalThis.emulator = new V86(data);
+               globalThis.data = data;
+        $(".container").onclick = () =>{
+            emulator.lock_mouse()
+        }
+        document.title = "自定义虚拟机-运行中| ReducedRadius 的工具页面"
+            },1000)
+           }
+        </script>
+        
+        <script src="./libv86.js"></script>
+        <script src="/global.js"></script>
+        <script>
+            window.onerror = function(e){
+              mdui.alert('很抱歉，网页在运行您的系统时出现以下较严重的错误。这可能导致运行直接中断。<br />'+e,"运行出错了qwq")
+            }
+
+          var num =  window.setInterval(e =>{
+                if(document.querySelector('.container')&&document.querySelector('.container').innerText.includes('No bootable device.')){
+                     mdui.alert('检测到此自定义v86实例缺少操作系统,已为您暂停。请加入可引导镜像后点击“继续使用”。','提示')
+                     emulator.stop();
+                     clearInterval(num)
+                }
+
+                if(window.emulator){
+                  $('#mask').style.display = 'none'
+                }
+            },80)
+
+            function vga_dump(){
+              var m =  Array.from(emulator.v86.cpu.devices.vga.vga_memory);
+              var n = new Array();
+              m.forEach((e,i) => i % 7 == 1?n.push('\n'+e.toString(16)):n.push(e.toString(16)))
+              const file = new Blob([`; ReducedRadius VM VGA Memory,total ${m.length} bytes\n地址  值\n`+n.join('')])
+              var a = document.createElement('a');
+              a.href = URL.createObjectURL(file)
+              a.download = 'vgadump.txt';
+              a.click()
+            }
+        </script>
+    </body>
+</html>

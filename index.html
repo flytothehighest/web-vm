@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="在网页上运行的虚拟机,运行的RAM(内存)最多为 2GB" >
+    <meta name="keywords" content="虚拟机,网页虚拟机,在线虚拟机,免费虚拟机">
+    <meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <title>网页虚拟机主页 | Reducedradius的工具页面</title>
+    <script src="/global.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name='apple-mobile-web-app-capable' content='yes' />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="robots" content="index, follow">
+    <style>
+        body{
+            color:white !important;
+            background-color: black;
+        }
+        a:not(.mdui-dialog > * > *){
+            text-decoration: underline lightblue;
+            color:white !important;
+        }
+        a:hover:not(.mdui-dialog > * > *){
+            color:lightblue !important
+        }
+        a:not(.mdui-dialog > *):after{
+            content: " ↗";
+        }
+        img{
+            max-height: 30px !important;
+        }
+    </style>
+</head>
+<body>
+<h2 style="color:whitesmoke;font-size: 30px" >欢迎使用网页虚拟机(页面版本:V1.7.0)</h2>
+<h3>所有虚拟机均基于<a href="https://webassembly.org/">WebAssembly</a>构建</h3>
+<h3 hidden><span style="color:red;">*</span>注意：您现在处于手机端或手机模拟器,平板电脑中,该页面可能使用不便</h3>
+<a href="feedback.html">有Bug？欢迎反馈</a>
+<br />
+<noscript>请打开JavaScript运行本应用</noscript>
+<h3 style="color: white;">当前可用模拟器列表</h3>
+<hr />1.V86 虚拟机（V86发行版本:20260825）<br />
+<img src="v86.png" alt="v86logo"><br />
+<a href="./linux.html">Linux(Build root)终端</a>
+<br /><br />
+<a href="./snowdrop.html">Snowdrop OS</a>
+<br><br />
+<a href="dos.html">xcom模拟器</a>
+<br><br />
+<a href="node.html">Node OS模拟器</a>
+<br><br />
+<a href="win1.html">Microsoft Windows 1&2模拟器</a>
+<br><br />
+<a href="./kolibri.html">kolibri OS模拟器</a>
+<br><br />
+<a href="./flappy.html">Floppy Bird模拟器</a>
+<br><br />
+<hr />
+
+<span>特殊内容</span><br><br />
+<a href="./cat.html" style="opacity: .9;">彩虹猫（非带有计时版本）</a>
+<br /><br />
+<a href="./custom.html">自定义虚拟机（现在该功能已修复，可以正常运行了~）</a>
+<br /><br />
+2.其它虚拟机<br />
+<img src="vmac.png" alt="vmac">
+<br />
+<a href="boxedwine/test.html">Boxed Wine(需下载38.2MB内容，可运行古早Win32/Win16程序<br />，但BUG多；版本2026R1_multithread)</a>
+<br /><br />
+<a href="mac6/index.html">Mac 6.0.7中文版</a>
+<br /><br />
+<a href="mac7/index.html">Mac 7.0.1中文版（内置数十款软件）</a>
+<br /><br />
+<a href="mac6/introduce.html">Mac II Tour</a>
+<br /><br />
+<a href="ATARI/index.html">TOS 1.04(Atari GEM,1989版)</a>
+<br /><br />
+--古早“极差”的游戏（使用MAME(https://github.com/mamedev/mame)模拟器，资料及各种模拟装置均仅仅为个人<b>互联网内</b>收集）---
+<br /><br />
+<a href="sqij/index.html">移植版SQIJ！(1986，一个根本无法玩的游戏)模拟器</a>
+<br /><br />
+<a href="sqij/custom.html">ZX Spectrum自定义文件(.z80)运行</a>
+<br /><br />
+<a href="et/index.html">Atari 2600 E.T.(1982)模拟器</a><br />
+-------------------
+<br />
+<a href="Apple2TS/index.html">Apple IIe模拟器</a><br /><br />
+3.相关内容
+<br /><br />
+<a onclick="location.replace(`/license.html#/vm/help.md`)">帮助&许可</a>
+<br /><br />
+<a onclick="location.replace('/license.html#/vm/other.md')">模拟器说明&截图</a>
+<br /><br />
+<a href="/DOSBOX">DOSBOX页面（内置UCDOS&早期病毒&小游戏等）</a>
+<br /><br />
+<button onclick="location.replace('/home.html')">返回主页面</button>
+<br /><br />
+<p style="color:wheat">本页面支持使用了<a href="https://github.com/copy/v86" target="_blank">v86</a>库和James Friend<a href="https://github.com/jsdf/pce">PCE JS库</a>,以及<a href="https://github.com/db48x/emularity">emularity库</a>等。
+此页面所涉及页面不是云系统，而是在本地运行的虚拟机。除标识“中文版”外，其他因网页运行代码受限均为纯英文。<br />MAME 是 Gregory Ember 的注册商标。如您担心本页面隐私问题，可参见<a onclick="location.replace('/license.html#/widget/policy.md')">ReducedRadius站点隐私政策</a></p>
+<p style="color:wheat">上次修改：2026/9/13,by ReducedRadius(https://github.com/flytothehighest)</p>
+<script>
+    screen.width < screen.height?document.querySelector('h2').hidden = false:0;
+window.addEventListener("load",function(){
+    setTimeout(() => {
+        if(localStorage.length  == 1){
+      mdui.alert(`检测到似乎是您的设备第一次访问本页面，建议您看一看本页下面的 “帮助&许可“。有何问题也可在反馈页面下进行哦~`,"欢迎使用网页虚拟机")
+      localStorage.setItem('vm',true)
+    }
+    }, 800);
+})
+</script>
+<span>使用本站此内容即表明您同意本站的<a href="/license.html#/widget/policy.md">《隐私政策》</a></span>
+</body>
+</html>
